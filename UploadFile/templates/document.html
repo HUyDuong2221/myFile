@@ -1,0 +1,26 @@
+
+
+{% block content %}
+  <h2>Documents</h2>
+  <ul>
+    {% for document in documents %}
+      <li>
+        <p style="color:black; "><strong>{{ document.description }}</strong> - 
+        <a href="{% url 'download' document.id %}">Download</a></p>
+      </li>
+      <li>
+        <p>Link dowload:
+        {% with current_url=request.build_absolute_uri %} </p>
+          {% with trimmed_url=current_url|slice:'0:-1' %}
+            <p>{{ trimmed_url }}{% url 'download' document.id %}</p>
+          {% endwith %}
+        {% endwith %}
+      </li><hr/>
+     
+    {% empty %}
+      <li>No documents found.</li>
+    {% endfor %}
+  </ul>
+  <a href="{% url 'upload'%}">Upload</a>
+  
+{% endblock %}

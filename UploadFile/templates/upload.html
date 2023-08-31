@@ -1,0 +1,26 @@
+
+
+{% block content %}
+  <h2>Upload a file</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Upload</button>
+  </form>
+
+  <table style="border: 1px" >
+    <tbody>
+        {%for ds in ds%}
+        <tr style="border: 1px solid">
+            <td>{{ds.id}}</td>
+            <td>{{ds.description}}</td>
+            <td>{{ds.document}} - 
+                <a href="{% url 'download' document.id %}">Download</a>
+            </td>
+        </tr>
+        {%endfor%}
+    </tbody>
+  </table>
+
+{% endblock %}
+
