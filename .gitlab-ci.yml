@@ -1,0 +1,40 @@
+stages:
+  - build
+  - test
+  - release
+  - deploy
+
+build-job:
+  tags:
+    - vm-shell
+  stage: build
+  script:
+    - echo "tao moi truong ao"
+    - virtualenv $(pwd)/venv
+    - source $(pwd)/venv/bin/activate
+    - echo "install requirements"
+    - pip install -r requirements.txt
+    - deactivate
+  artifacts:
+    #untracked: false
+    #when: on_success
+    #expire_in: "30 days"
+    paths:
+      - $(pwd)/venv
+
+test-job:
+  tags:
+    - vm-shell
+  stage: test
+  script:
+    - echo "activating venv"
+    - source $(pwd)/venv/bin/activate
+    - echo "runing unit test"
+    - python manage.py test one_db
+    - echo "checking server"
+    - python manage.py runserver &
+    - sleep 10
+    - curl -sSf http://localhost:8000 > /dev/null && echo "server is up"
+    - sudo pkill python
+    - deactivate
+    - echo "test success"
